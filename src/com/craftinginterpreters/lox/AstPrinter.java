@@ -64,6 +64,16 @@ class AstPrinter implements Expr.Visitor<String> {
         return "(= " + expr.name.lexeme + " " + print(expr.value) + ")";
     }
 
+    @Override
+    public String visitFunctionStmt(Stmt.Function stmt) {
+        return "(fun " + stmt.name.lexeme + ")";
+    }
+
+    @Override
+    public String visitCallExpr(Expr.Call expr) {
+        return "(call " + print(expr.callee) + ")";
+    }
+
     public static void main(String[] args) {
         Expr expression = new Expr.Binary(
                 new Expr.Unary(
