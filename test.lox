@@ -1,11 +1,14 @@
-fun add(a, b) {
-  return a + b;
-}
-print add(3, 4);
+fun makeCounter() {
+  var count = 0;
 
-fun earlyReturn(x) {
-  if (x > 5) return "big";
-  return "small";
+  fun increment() {
+    count = count + 1;
+    print count;
+  }
+
+  return increment;
 }
-print earlyReturn(10);
-print earlyReturn(2);
+
+var counter = makeCounter();
+counter();
+counter();
