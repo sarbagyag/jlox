@@ -1,14 +1,157 @@
+// ═══════════════════════════════
+// 1. ARITHMETIC + PRECEDENCE
+// ═══════════════════════════════
+print 2 + 3 * 4;        // 14 (not 20 — precedence works)
+print (2 + 3) * 4;      // 20 (grouping works)
+print 10 / 2 - 1;       // 4
+print -5 + 3;            // -2
+
+// ═══════════════════════════════
+// 2. COMPARISON + EQUALITY
+// ═══════════════════════════════
+print 1 == 1;            // true
+print 1 != 2;            // true
+print 3 > 2;             // true
+print 2 >= 2;            // true
+
+// ═══════════════════════════════
+// 3. STRING CONCATENATION
+// ═══════════════════════════════
+print "hello" + " world";  // hello world
+
+// ═══════════════════════════════
+// 4. TRUTHINESS
+// ═══════════════════════════════
+print !nil;              // true
+print !false;            // true
+print !0;                // false (0 is truthy in Lox)
+print !"";               // false ("" is truthy in Lox)
+
+// ═══════════════════════════════
+// 5. VARIABLES + ASSIGNMENT
+// ═══════════════════════════════
+var x = 10;
+var y = x + 5;
+print x;                 // 10
+print y;                 // 15
+x = 20;
+print x;                 // 20
+
+// ═══════════════════════════════
+// 6. SCOPE + SHADOWING
+// ═══════════════════════════════
+var a = "global";
+{
+  var a = "block";
+  print a;               // block
+}
+print a;                 // global
+
+// ═══════════════════════════════
+// 7. IF / ELSE
+// ═══════════════════════════════
+if (x > 10) {
+  print "big";           // big
+} else {
+  print "small";
+}
+
+// ═══════════════════════════════
+// 8. AND / OR (short-circuit)
+// ═══════════════════════════════
+print "yes" or "no";     // yes
+print nil or "fallback"; // fallback
+print false and "never"; // false
+print true and "reached";// reached
+
+var guard = nil;
+if (guard != nil and guard == "hello") {
+  print "unsafe";
+} else {
+  print "guarded";       // guarded
+}
+
+// ═══════════════════════════════
+// 9. WHILE LOOP
+// ═══════════════════════════════
+var i = 0;
+while (i < 3) {
+  print i;               // 0, 1, 2
+  i = i + 1;
+}
+
+// ═══════════════════════════════
+// 10. FOR LOOP (desugared)
+// ═══════════════════════════════
+for (var j = 0; j < 3; j = j + 1) {
+  print j;               // 0, 1, 2
+}
+
+// ═══════════════════════════════
+// 11. FUNCTIONS + RETURN
+// ═══════════════════════════════
+fun add(a, b) {
+  return a + b;
+}
+print add(3, 4);         // 7
+
+fun earlyReturn(n) {
+  if (n > 5) return "big";
+  return "small";
+}
+print earlyReturn(10);   // big
+print earlyReturn(2);    // small
+
+// ═══════════════════════════════
+// 12. RECURSION
+// ═══════════════════════════════
+fun fib(n) {
+  if (n <= 1) return n;
+  return fib(n - 2) + fib(n - 1);
+}
+print fib(10);           // 55
+
+// ═══════════════════════════════
+// 13. CLOSURES
+// ═══════════════════════════════
 fun makeCounter() {
   var count = 0;
-
   fun increment() {
     count = count + 1;
     print count;
   }
-
   return increment;
 }
-
 var counter = makeCounter();
-counter();
-counter();
+counter();               // 1
+counter();               // 2
+
+// two closures sharing same environment
+fun makeAdder(x) {
+  fun add(y) {
+    return x + y;
+  }
+  return add;
+}
+var add5 = makeAdder(5);
+var add10 = makeAdder(10);
+print add5(3);           // 8
+print add10(3);          // 13
+
+// ═══════════════════════════════
+// 14. LEXICAL SCOPING FIX (Ch.11)
+// ═══════════════════════════════
+var b = "global";
+{
+  fun showB() {
+    print b;
+  }
+  showB();               // global
+  var b = "block";
+  showB();               // global (NOT block — Resolver fixed this)
+}
+
+// ═══════════════════════════════
+// 15. NATIVE FUNCTIONS
+// ═══════════════════════════════
+print clock();           // current timestamp
